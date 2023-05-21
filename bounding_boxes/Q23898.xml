@@ -1,0 +1,70 @@
+<annotation>
+    <folder>JPEGImages</folder>
+    <filename>Q23898.jpg</filename>
+    <path>/media/HDD/data/Wikidata_Paintings/IconArt_v1/JPEGImages/Q23898.jpg</path>
+    <source>
+        <database>IconArt_v1</database>
+    </source>
+    <size>
+        <width>765</width>
+        <height>600</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>angel</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>211</xmin>
+            <ymin>290</ymin>
+            <xmax>308</xmax>
+            <ymax>552</ymax>
+        </bndbox>
+    </object>    <object>
+        <name>angel</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>469</xmin>
+            <ymin>290</ymin>
+            <xmax>545</xmax>
+            <ymax>557</ymax>
+        </bndbox>
+    </object>    <object>
+        <name>Child_Jesus</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>359</xmin>
+            <ymin>296</ymin>
+            <xmax>436</xmax>
+            <ymax>412</ymax>
+        </bndbox>
+    </object>    <object>
+        <name>Mary</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>296</xmin>
+            <ymin>231</ymin>
+            <xmax>473</xmax>
+            <ymax>550</ymax>
+        </bndbox>
+    </object>    <object>
+        <name>nudity</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>357</xmin>
+            <ymin>294</ymin>
+            <xmax>434</xmax>
+            <ymax>410</ymax>
+        </bndbox>
+    </object>
+</annotation>
