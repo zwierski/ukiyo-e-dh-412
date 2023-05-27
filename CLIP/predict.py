@@ -76,8 +76,8 @@ if __name__ == "__main__":
         with torch.no_grad():
             # get the image and text embedding
             text = clip.tokenize([f"This is a photo of a {des}" for des in text])
-            image_features = model.encode_image(image.cuda()))
-            text_features = model.encode_text(text.cuda()))
+            image_features = model.encode_image(image.cuda())
+            text_features = model.encode_text(text.cuda())
 
             image_features /= image_features.norm(dim=-1, keepdim=True)
             text_features /= text_features.norm(dim=-1, keepdim=True)
