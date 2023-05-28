@@ -14,7 +14,6 @@ from io import BytesIO
 from collections import OrderedDict
 import torch
 from torch.utils.data import Dataset, DataLoader
-from torchvision.datasets import CIFAR100
 
 
 class image_text_dataset(Dataset):
@@ -71,17 +70,15 @@ if __name__ == "__main__":
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=0)
 
     # Get the image and text embedding
-    text_prompts = ['Emperor', 'Shogun', 'Minister', 'Vote', 'Constitution',
+    text_prompts = ['Emperor', 'Shogun', 'Samurai', 'Minister', 'Constitution',
               'Courtroom', 'Contract', 'Patent', 'Judge', 'Lawyer', 'Police', 'Prison',
               'School', 'Uniform', 'Textbook', 'Scientific instrument',
-              'Steamship', 'Telegraph', 'Brick', 'Bank',
-              'Factory', 'Steam', 'Worker', 'Railway', 'Train', 'Lantern', 'Bulb',
-              'Soldier', 'Gun', 'Warship', 'Sword',
-              'Kimono', 'Suit', 'Gown', 'Glove']
-    cifar100 = CIFAR100(os.path.expanduser("~/.cache"), transform=preprocess, download=True)
-    # combine the text prompts with the cifar100 labels, get the unique labels
-    # ['apple', 'aquarium_fish', 'baby', 'bear', 'beaver', 'bed', 'bee', 'beetle', 'bicycle', 'bottle', 'bowl', 'boy', 'bridge', 'bus', 'butterfly', 'camel', 'can', 'castle', 'caterpillar', 'cattle', 'chair', 'chimpanzee', 'clock', 'cloud', 'cockroach', 'couch', 'crab', 'crocodile', 'cup', 'dinosaur', 'dolphin', 'elephant', 'flatfish', 'forest', 'fox', 'girl', 'hamster', 'house', 'kangaroo', 'keyboard', 'lamp', 'lawn_mower', 'leopard', 'lion', 'lizard', 'lobster', 'man', 'maple_tree', 'motorcycle', 'mountain', 'mouse', 'mushroom', 'oak_tree', 'orange', 'orchid', 'otter', 'palm_tree', 'pear', 'pickup_truck', 'pine_tree', 'plain', 'plate', 'poppy', 'porcupine', 'possum', 'rabbit', 'raccoon', 'ray', 'road', 'rocket', 'rose', 'sea', 'seal', 'shark', 'shrew', 'skunk', 'skyscraper', 'snail', 'snake', 'spider', 'squirrel', 'streetcar', 'sunflower', 'sweet_pepper', 'table', 'tank', 'telephone', 'television', 'tiger', 'tractor', 'train', 'trout', 'tulip', 'turtle', 'wardrobe', 'whale', 'willow_tree', 'wolf', 'woman', 'worm']
-    text_prompts = text_prompts + cifar100.classes
+              'Steamship', 'Telegraph', 'Brick', 'Bank', 'Factory', 'Steam', 'Worker', 'Railway', 'Train', 'Lantern', 'Bulb', 'Bus', 'Clock', 'Bicycle', 'Motorcycle', 'Car', 'Bridge',
+              'Soldier', 'Gun', 'Warship', 'Sword', 'Army',
+              'Kimono', 'Suit', 'Gown', 'Glove',
+              'Farmer','Merchant', 'Craftsman', 'Kabuki',
+              'Mountain', 'Sea', 'Lake', 'Plant', 'Animal', 'Man', 'Woman']
+    text_prompts = text_prompts
     text_prompts = list(set(text_prompts))
     # index to label dictionary
     idx2label = {idx:label for idx,label in enumerate(text_prompts)}
@@ -112,11 +109,14 @@ if __name__ == "__main__":
                 prompt_features = model.encode_text(prompt_tokens).float()
                 prompt_features /= prompt_features.norm(dim=-1, keepdim=True)
 
-            prompt_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1).float()            
-            top_probs, top_labels = prompt_probs.cpu().topk(15, dim=-1)
-            top_probs = top_probs.tolist()
-            top_labels = top_labels.tolist()
-            top_labels = [[idx2label[idx] for idx in labels] for labels in top_labels]
+            prompt_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1).float()
+            try:       
+                top_probs, top_labels = prompt_probs.cpu().topk(7, dim=-1)
+                top_probs = top_probs.tolist()
+                top_labels = top_labels.tolist()
+                top_labels = [[idx2label[idx] for idx in labels] for labels in top_labels]
+            except:
+                continue
 
         # save the top_probs and top_labels       
         new_data = pd.DataFrame({'image_path': path, 'text': original_text, 'top_probs': list(top_probs), 'top_labels': list(top_labels)})
