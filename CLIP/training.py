@@ -39,9 +39,15 @@ class image_text_dataset(Dataset):
         return len(self.text)
 
     def __getitem__(self, idx):
+      try:
         image = self.preprocess(Image.open(self.image_path[idx]))  # Image from PIL module
         text = self.text[idx]
-        return image, text
+      except:
+        image = self.preprocess(Image.open(self.image_path[0]))
+        text = self.text[0]
+        
+      return image, text
+        
 
 
 
@@ -55,6 +61,7 @@ def convert_models_to_fp32(model):
 def load_data(csv_data_address,batch_size,max_length,preprocess):
   data = pd.read_csv(csv_data_address)  
   data.dropna(subset=['LABEL', 'Image URL'], inplace=True)
+  #data=data.sample(n=10000, random_state=42)
   data['LABEL'] = data['LABEL'].apply(lambda x: x[:70] if not isinstance(x,float) and len(x)>max_length else x)
   image_paths = data['Image URL'].apply(lambda x: "/root/ukiyo-e/images/images/"+x.split('/')[-1]).tolist()
   texts = data['LABEL'].tolist()  
@@ -83,6 +90,7 @@ def train(csv_data_address,batch_size,epoch_num,max_length):
   best_loss = 1000000
 
   for epoch in range(epoch_num):
+    print("Epoch now is: "+str(epoch))
     for batch in dataloader:
       try:
         optimizer.zero_grad()
@@ -116,11 +124,12 @@ def train(csv_data_address,batch_size,epoch_num,max_length):
               'optimizer_state_dict': optimizer.state_dict(),
               'loss': total_loss,
               }, f"best_model.pt") #just change to your preferred folder/filename
+    print("Epoch now is finished, and best loss now is: "+str(best_loss))
 
 @click.command()
 @click.option('--csv_data_address', default="./data.csv", help='Address for the training data in csv form')
 @click.option('--batch_size', default=36, help='Size of batch')
-@click.option('--epoch_num', default=20, help='Number of epochs for training')
+@click.option('--epoch_num', default=7, help='Number of epochs for training')
 @click.option('--max_length', default=77, help='Maximum length of the description')
 def train_command(csv_data_address,batch_size,epoch_num,max_length):
     return train(csv_data_address,batch_size,epoch_num,max_length) 
