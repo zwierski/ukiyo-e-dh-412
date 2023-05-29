@@ -79,7 +79,6 @@ if __name__ == "__main__":
               'Farmer','Merchant', 'Craftsman', 'Kabuki',
               'Mountain', 'Sea', 'Lake', 'Plant', 'Animal', 'Man', 'Woman']
     text_prompts = text_prompts
-    text_prompts = list(set(text_prompts))
     # index to label dictionary
     idx2label = {idx:label for idx,label in enumerate(text_prompts)}
 
@@ -111,7 +110,7 @@ if __name__ == "__main__":
 
             prompt_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1).float()
             try:       
-                top_probs, top_labels = prompt_probs.cpu().topk(7, dim=-1)
+                top_probs, top_labels = prompt_probs.cpu().topk(10, dim=-1)
                 top_probs = top_probs.tolist()
                 top_labels = top_labels.tolist()
                 top_labels = [[idx2label[idx] for idx in labels] for labels in top_labels]
